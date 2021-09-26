@@ -6,9 +6,9 @@ class Polynom:
     d_coefficients = []
 
     def __init__(self, *coefs):
-        self.coefficients = coefs
-        for i in range(len(self.coefficients)-1):
-            self.d_coefficients[i] = self.coefficients[i + 1] * (i + 1)
+        self.coefficients = list(coefs)
+        for i in range(1, len(self.coefficients)):
+            self.d_coefficients.append(self.coefficients[i] * i)
 
     def function(self, x):
         f = 0
@@ -54,7 +54,7 @@ class Polynom:
         x_prev = 1000000  # float('-inf')
         x = (a * f_b - b * f_a) / (f_b - f_a)
         f_x = self.function(x)
-        while f_x > epsilon or math.fabs(x-x_prev) > epsilon:
+        while math.fabs(f_x) > epsilon or math.fabs(x-x_prev) > epsilon:
             if f_a * f_x < 0:
                 f_b = f_x
                 b = x
@@ -68,12 +68,24 @@ class Polynom:
         return x
 
     def newtons_method(self, a, b, epsilon):
-        pass
+        if self.function(a) * self.sec_derivative(a) > 0:
+            x = a
+        else:
+            x = b
+
+        dx = self.function(x) / self.derivative(x)
+
+        while math.fabs(dx) > epsilon or math.fabs(self.function(x)) > epsilon:
+            x -= dx
+            dx = self.function(x) / self.derivative(x)
+            print(x, self.function(x))
+
+        return x
 
 
 if __name__ == "__main__":
     var = Polynom(6, -4, 2, 1, -3, 2)
-    print(var.chord_method(-2, 0, 0.00001))
+    print(var.chord_method(-2, 0, 1e-5))
     print(var.function(-1.2197348640894328))
 
 
