@@ -38,22 +38,29 @@ class Polynom:
         return ddf
 
     def bisection_method(self, a, b, epsilon):
+        print('-'*70 + '\n' + ' ' * 27 + 'Bisection method' + ' ' * 27 + '\n' + '-'*70)
         x = (a + b) / 2
+        iters = 0
         while math.fabs(b-a) > epsilon or math.fabs(self.function(x)) > epsilon:
             if self.function(a) * self.function(x) <= 0:
                 b = x
             else:
                 a = x
             x = (a + b)/2
+            iters += 1
+            print(iters, 'iteration, a =', round(a, 6), 'b =', round(b, 6), 'f(a) =', round(self.function(a), 6), 'f(b) =', round(self.function(b), 6))
+        print('Number of iterations:', iters)
 
         return x
 
     def chord_method(self, a, b, epsilon):
+        print('-'*70 + '\n' + ' ' * 28 + 'Hordes method' + ' ' * 29 + '\n' + '-'*70)
         f_a = self.function(a)
         f_b = self.function(b)
-        x_prev = 1000000  # float('-inf')
+        x_prev = 1000000
         x = (a * f_b - b * f_a) / (f_b - f_a)
         f_x = self.function(x)
+        iters = 0
         while math.fabs(f_x) > epsilon or math.fabs(x-x_prev) > epsilon:
             if f_a * f_x < 0:
                 f_b = f_x
@@ -64,30 +71,38 @@ class Polynom:
             x_prev = x
             x = (a * f_b - b * f_a) / (f_b - f_a)
             f_x = self.function(x)
+            iters += 1
+            print(iters, 'iteration, a =', round(a, 6), 'b =', round(b, 6), 'f(a) =', round(f_a, 6), 'f(b) = ', round(f_b, 6))
+        print('Number of iterations:', iters)
 
         return x
 
     def newtons_method(self, a, b, epsilon):
+        print('-'*70 + '\n' + ' ' * 26 + 'Newton\'s method' + ' ' * 27 + '\n' + '-'*70)
+
         if self.function(a) * self.sec_derivative(a) > 0:
             x = a
         else:
             x = b
 
         dx = self.function(x) / self.derivative(x)
+        iters = 0
 
         while math.fabs(dx) > epsilon or math.fabs(self.function(x)) > epsilon:
             x -= dx
             dx = self.function(x) / self.derivative(x)
-            print(x, self.function(x))
+            iters += 1
+            print(iters, 'iteration, x =', x, 'f(x) =', self.function(x))
+        print('Number of iterations:', iters)
 
         return x
 
 
 if __name__ == "__main__":
     var = Polynom(6, -4, 2, 1, -3, 2)
-    print(var.chord_method(-2, 0, 1e-5))
-    print(var.function(-1.2197348640894328))
-
+    print('x =', round(var.bisection_method(-2, -1, 1e-5), 5))
+    print('x =', round(var.chord_method(-2, -1, 1e-5), 5))
+    print('x =', round(var.newtons_method(-2, -1, 1e-5), 5))
 
 elif __name__ == "__init__":
     pass
